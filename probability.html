@@ -7,20 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Probability &mdash; kalman_filter 0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
-      <script src="static/jquery.js?v=5d32c60e"></script>
-      <script src="static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="static/documentation_options.js?v=2709fde1"></script>
-      <script src="static/doctools.js?v=9bcbadda"></script>
-      <script src="static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="static/js/theme.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kalman Filter Implementation" href="kalman_filter_implementation.html" />
+    <link rel="next" title="Least Square Estimation" href="least_square_estimation.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
 </head>
 
@@ -56,10 +56,59 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#marginal-pdfs">Marginal PDFs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#expected-value">Expected value</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#statistical-independence">Statistical independence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#covariance-and-correlation">Covariance and correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#die-rolls">Die rolls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependent-opposite-outcomes">Dependent opposite outcomes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependent-conditional-outcomes">Dependent conditional outcomes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sum-of-independent-rvs">Sum of independent RVs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#expected-value-of-the-sum-of-outcomes">Expected value of the sum of outcomes</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#multivariate-statistics">Multivariate statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#correlation">Correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#covariance">Covariance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autocorrelation">Autocorrelation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autocovariance">Autocovariance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gaussian-rv">Gaussian RV</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#linear-transformation">Linear transformation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normality">Normality</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#stochatsic-processes">Stochatsic processes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#types-of-stochastic-processes">Types of stochastic processes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pdf">PDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">CDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mean">Mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Covariance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#joint-distribution">Joint distribution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#second-order-pdf">Second-order PDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#second-order-cdf">Second-order CDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Autocorrelation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Autocovariance</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#strict-sense-stationary-process-sss">Strict-sense stationary process: SSS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wide-sense-stationary-process-wss">Wide-sense stationary process: WSS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ergodic-process">Ergodic process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-correlation-and-cross-covariance">Cross correlation and cross covariance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#white-noise-and-colored-noise">White noise and colored noise</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="least_square_estimation.html">Least Square Estimation</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kalman_filter_implementation.html">Kalman Filter Implementation</a></li>
@@ -94,7 +143,7 @@
 <h1>Probability<a class="headerlink" href="#probability" title="Link to this heading"></a></h1>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>We won’t be covering all probability theory. This section focuses on multiple random variables and stochastic processes.</p>
+<p>This section does not cover all probability theory. It focuses on multiple random variables and stochastic processes.</p>
 </div>
 <section id="multiple-random-variables">
 <h2>Multiple Random Variables<a class="headerlink" href="#multiple-random-variables" title="Link to this heading"></a></h2>
@@ -148,6 +197,449 @@
 \[f_Y(y) = \int_{-\infty}^{\infty} f_{X,Y}(x,y)\,dx\]</div>
 <p>For discrete random variables, replace PDFs with PMFs and integrals with sums.</p>
 </section>
+<section id="expected-value">
+<h3>Expected value<a class="headerlink" href="#expected-value" title="Link to this heading"></a></h3>
+<p>The expected value of a function <span class="math notranslate nohighlight">\(g(\cdot, \cdot)\)</span> of two RVs is</p>
+<div class="math notranslate nohighlight">
+\[E\bigl[g(X, Y)\bigr] = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(x, y)\,f_{X,Y}(x, y)\,dx\,dy\]</div>
+</section>
+</section>
+<section id="statistical-independence">
+<h2>Statistical independence<a class="headerlink" href="#statistical-independence" title="Link to this heading"></a></h2>
+<p>Random variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent if</p>
+<div class="math notranslate nohighlight">
+\[P\bigl(X \le x,\; Y \le y\bigr) = P\bigl(X \le x\bigr)\,P\bigl(Y \le y \bigr), \quad \text{for all } x,y\]</div>
+<p>From the definition of joint distribution and PDF, this implies</p>
+<div class="math notranslate nohighlight">
+\[F_{X,Y}(x, y) = F_X(x)\,F_Y(y)\]</div>
+<div class="math notranslate nohighlight">
+\[f_{X,Y}(x, y) = f_X(x)\,f_Y(y)\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The central limit theorem says that the sum of independent RVs tends toward a Gaussian RV, regardless of the PDF of the individual RVs that contribute to the sum.</p>
+</div>
+<section id="covariance-and-correlation">
+<h3>Covariance and correlation<a class="headerlink" href="#covariance-and-correlation" title="Link to this heading"></a></h3>
+<p>We define the covariance of two scalar RVs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[C_{XY} = E\bigl[(X - E[X])(Y - E[Y])\bigr] = E[XY] - E[X]E[Y]\]</div>
+<p>We define the correlation coefficient of two scalar RVs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\rho = \frac{C_{XY}}{\sigma_X\,\sigma_Y}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The correlation is a normalized measure of linear dependence between two RVs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent, then <span class="math notranslate nohighlight">\(\rho = 0\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(Y\)</span> is a linear function of <span class="math notranslate nohighlight">\(X\)</span>, then <span class="math notranslate nohighlight">\(\rho = \pm 1\)</span>.</p></li>
+</ul>
+</div>
+<p>We define the (unnormalized) cross-correlation of two scalar RVs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[R_{XY} = E[XY]\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Two RVs are said to be uncorrelated if <span class="math notranslate nohighlight">\(R_{XY} = E[X]E[Y]\)</span>.</p>
+<p>From the definition of independence, if two RVs are independent, then they are uncorrelated. Independence implies uncorrelatedness, but uncorrelatedness does not imply independence. In the special case in which two RVs are Gaussian and uncorrelated, they are also independent.</p>
+<p>Two RVs are orthogonal if <span class="math notranslate nohighlight">\(R_{XY} = 0\)</span>.</p>
+<p>If two RVs are uncorrelated, then they are orthogonal only if at least one of them has zero mean. If two RVs are orthogonal, they may or may not be uncorrelated.</p>
+</div>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<section id="die-rolls">
+<h4>Die rolls<a class="headerlink" href="#die-rolls" title="Link to this heading"></a></h4>
+<p>Two rolls of a fair six-sided die are represented by the RVs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>The two RVs are independent because one roll does not affect the other. Each face has probability <span class="math notranslate nohighlight">\(1/6\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[E[X] = E[Y] = \frac{1+2+3+4+5+6}{6} = 3.5\]</div>
+<p>There are <span class="math notranslate nohighlight">\(36\)</span> equally likely combinations of the two rolls. The (cross-)correlation is</p>
+<div class="math notranslate nohighlight">
+\[R_{XY} = E[XY] = \frac{1}{36}\sum_{i=1}^{6}\sum_{j=1}^{6} ij = 12.25\]</div>
+<div class="math notranslate nohighlight">
+\[E[X]E[Y] = 3.5 \cdot 3.5 = 12.25\]</div>
+<p>Thus <span class="math notranslate nohighlight">\(E[XY] = E[X]E[Y]\)</span>, so <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are uncorrelated.</p>
+</section>
+<section id="dependent-opposite-outcomes">
+<h4>Dependent opposite outcomes<a class="headerlink" href="#dependent-opposite-outcomes" title="Link to this heading"></a></h4>
+<p>A rigged machine: on the first spin <span class="math notranslate nohighlight">\(X\)</span> takes values <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span> with probability <span class="math notranslate nohighlight">\(1/2\)</span> each, and the second spin <span class="math notranslate nohighlight">\(Y\)</span> is always the opposite (so <span class="math notranslate nohighlight">\(Y=-X\)</span>). The possible outcomes are <span class="math notranslate nohighlight">\((1,-1)\)</span> and <span class="math notranslate nohighlight">\((-1,1)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[E[X] = 0, \quad E[Y] = 0\]</div>
+<div class="math notranslate nohighlight">
+\[E[XY] = \frac{(1)(-1) + (-1)(1)}{2} = -1\]</div>
+<p>Since <span class="math notranslate nohighlight">\(E[XY] \neq E[X]E[Y]\)</span>, these variables are correlated; since <span class="math notranslate nohighlight">\(E[XY] \neq 0\)</span> they are not orthogonal.</p>
+</section>
+<section id="dependent-conditional-outcomes">
+<h4>Dependent conditional outcomes<a class="headerlink" href="#dependent-conditional-outcomes" title="Link to this heading"></a></h4>
+<p>On the first spin <span class="math notranslate nohighlight">\(X\)</span> takes values <span class="math notranslate nohighlight">\(-1,0,1\)</span> equally likely. On the second spin define <span class="math notranslate nohighlight">\(Y=1\)</span> if <span class="math notranslate nohighlight">\(X=0\)</span>, otherwise <span class="math notranslate nohighlight">\(Y=0\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[E[X] = \frac{-1 + 0 + 1}{3} = 0\]</div>
+<div class="math notranslate nohighlight">
+\[E[Y] = \frac{0 + 1 + 0}{3} = \frac{1}{3}\]</div>
+<div class="math notranslate nohighlight">
+\[E[XY] = \frac{0 + 0 + 0}{3} = 0\]</div>
+<p>Here <span class="math notranslate nohighlight">\(E[XY] = E[X]E[Y]\)</span>, so <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are uncorrelated; and <span class="math notranslate nohighlight">\(E[XY]=0\)</span> so they are orthogonal.</p>
+</section>
+<section id="sum-of-independent-rvs">
+<h4>Sum of independent RVs<a class="headerlink" href="#sum-of-independent-rvs" title="Link to this heading"></a></h4>
+<p>Suppose <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent RVs, and define <span class="math notranslate nohighlight">\(Z = g(X) + h(Y)\)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+E[Z] &amp;= E[g(X)+h(Y)] \\
+         &amp;= \iint (g(x)+h(y))\,f_{X,Y}(x,y)\,dx\,dy \\
+         &amp;= \iint (g(x)+h(y))\,f_X(x)f_Y(y)\,dx\,dy \\
+         &amp;= \int g(x)f_X(x)\,dx \int f_Y(y)\,dy \\
+         &amp;\quad + \int h(y)f_Y(y)\,dy\int f_X(x)\,dx \\
+         &amp;= E[g(X)] + E[h(Y)]
+\end{aligned}\end{split}\]</div>
+<p>Therefore the mean of the sum of two independent RVs equals the sum of their means:</p>
+<div class="math notranslate nohighlight">
+\[E[X+Y] = E[X] + E[Y]\]</div>
+</section>
+<section id="expected-value-of-the-sum-of-outcomes">
+<h4>Expected value of the sum of outcomes<a class="headerlink" href="#expected-value-of-the-sum-of-outcomes" title="Link to this heading"></a></h4>
+<p>Suppose we roll a die twice</p>
+<p>We use <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> to refer to the two rolls of the die</p>
+<p><span class="math notranslate nohighlight">\(Z\)</span> represents the sum of the two outcomes</p>
+<p>Then <span class="math notranslate nohighlight">\(Z = X + Y\)</span></p>
+<p>Since <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent, we have</p>
+<div class="math notranslate nohighlight">
+\[E\bigl(Z\bigr) = E\bigl(X\bigr) + E\big(Y\bigr) = 3.5 + 3.5 = 7\]</div>
+</section>
+</section>
+</section>
+<section id="multivariate-statistics">
+<h2>Multivariate statistics<a class="headerlink" href="#multivariate-statistics" title="Link to this heading"></a></h2>
+<p>Given an n-element RV <span class="math notranslate nohighlight">\(X\)</span> and an m-element RV <span class="math notranslate nohighlight">\(Y\)</span></p>
+<p><span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are comlumn vectors</p>
+<section id="correlation">
+<h3>Correlation<a class="headerlink" href="#correlation" title="Link to this heading"></a></h3>
+<p>Their correlation is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_{XY} &amp;= E\bigl(XY^{T}\bigr) \\
+       &amp;= \begin{bmatrix}
+          E\bigl(X_{1}Y_{1}\bigr) &amp; \cdots &amp; E\bigl(X_{1}Y_{m}\bigr) \\
+          \vdots &amp; \ddots &amp; \vdots \\
+          E\bigl(X_{n}Y_{1} &amp; \cdots &amp; E\bigl(X_{n}Y_{m}\bigr)
+          \end{bmatrix}\end{split}\]</div>
+</section>
+<section id="covariance">
+<h3>Covariance<a class="headerlink" href="#covariance" title="Link to this heading"></a></h3>
+<p>Their covariance is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}C_{XY} &amp;= E\bigl[\bigl(X - \bar{X}\bigr)\bigl(Y - \bar{Y}\bigr)^{T}\bigr] \\
+       &amp;= E\bigl(XY^{T}\bigr) - \bar{X}\bar{Y}^{T}\end{split}\]</div>
+</section>
+<section id="autocorrelation">
+<h3>Autocorrelation<a class="headerlink" href="#autocorrelation" title="Link to this heading"></a></h3>
+<p>The autocorrelation of th n-element RV <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_{X} &amp;= E\bigl[XX^{T}\bigr] \\
+      &amp;= \begin{bmatrix}
+         E\bigl[X_{1}^{2}\bigr] &amp; \cdots &amp; E\bigl[X_{1}X_{n}\bigr] \\
+         \vdots &amp; \ddots &amp; \vdots \\
+         E\bigl[X_{n}X_{1}\bigr] &amp; \cdots &amp; E\bigl[X_{n}^{2}\bigr]
+         \end{bmatrix}\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(E\bigl(X_{i}X_{j}\bigr) = E\bigl(X_{j}X_{i}\bigr)\)</span>, then <span class="math notranslate nohighlight">\(R_{X} = R_{X}^{T}\)</span></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>An autocorrelation matrix is always symmetric.</p>
+</div>
+<p>For any n-element column vector <span class="math notranslate nohighlight">\(z\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z^{T}R_{X}z &amp;= z^{T}E\bigl[XX^{T}\bigr]z \\
+            &amp;= E\bigl[z^{T}XX^{T}z\bigr] \\
+            &amp;= E\bigl[\bigl(z^{T}X\bigr)^{2}\bigr] \\
+            &amp;\ge 0\end{split}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>An autocorrelation matrix is always positive semidefinite.</p>
+</div>
+</section>
+<section id="autocovariance">
+<h3>Autocovariance<a class="headerlink" href="#autocovariance" title="Link to this heading"></a></h3>
+<p>The autocovariance of the n-element RV <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}C_{X} &amp;= E\bigl[\bigl(X - \bar{X}\bigr)\bigl(X - \bar{X}\bigr)^{T}\bigr] \\
+      &amp;= \begin{bmatrix}
+         E\bigl[\bigl(X_{1} - \bar{X_{1}}\bigr)^{2}\bigr] &amp; \cdots &amp; E\bigl[\bigl(X_{1} - \bar{X_{1}}\bigr)\bigl(X_{n} - \bar{X_{n}}\bigr)\bigr] \\
+         \vdots &amp; \ddots &amp; \vdots \\
+         E\bigl[\bigl(X_{n} - \bar{X_{n}}\bigr)\bigl(X_{1} - \bar{X_{1}}\bigr)\bigr] &amp; \cdots &amp; E\bigl[\bigl(X_{n} - \bar{X_{n}}\bigr)^{2}\bigr]
+         \end{bmatrix} \\
+      &amp;= \begin{bmatrix}
+         \sigma_{1}^{2} &amp; \cdots &amp; \sigma_{1n} \\
+         \vdots &amp; \ddots &amp; \vdots \\
+         \sigma_{n1} &amp; \cdots &amp; \sigma_{n}^{2}
+         \end{bmatrix}\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\sigma_{ij} = \sigma_{ji}\)</span>, then <span class="math notranslate nohighlight">\(C_{X} = C_{X}^{T}\)</span></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>An autocovariance matrix is always symmetric</p>
+</div>
+<p>For any n-element column vector <span class="math notranslate nohighlight">\(z\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z^{T}C_{X}z &amp;= z^{T}E\bigl[\bigl(X - \bar{X}\bigr)\bigl(X - \bar{X}\bigr)^{T}\bigr]z \\
+            &amp;= E\bigl[z^{T}\bigl(X - \bar{X}\bigr)\bigl(X - \bar{X}\bigr)^{T}z\bigr] \\
+            &amp;= E\bigl[\bigl(z^{T}\bigl(X - \bar{X}\bigr)\bigr)^{2}\bigr] \\
+            &amp;\ge 0\end{split}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>An autocovariance matrix is always positive semidefinite.</p>
+</div>
+</section>
+<section id="gaussian-rv">
+<h3>Gaussian RV<a class="headerlink" href="#gaussian-rv" title="Link to this heading"></a></h3>
+<p>An n-element RV <span class="math notranslate nohighlight">\(X\)</span> is multivariate Gaussian with mean <span class="math notranslate nohighlight">\(\bar{X}\)</span> and covariance <span class="math notranslate nohighlight">\(C_X\)</span> if its PDF is</p>
+<div class="math notranslate nohighlight">
+\[f_X(x) = \frac{1}{(2\pi)^{\frac{n}{2}}\,|C_X|^{\frac{1}{2}}}\;e^{-\tfrac{1}{2}(X - \bar{X})^{T}C_X^{-1}(X - \bar{X})}\]</div>
+<section id="linear-transformation">
+<h4>Linear transformation<a class="headerlink" href="#linear-transformation" title="Link to this heading"></a></h4>
+<p>Consider a Gaussian RV <span class="math notranslate nohighlight">\(X\)</span> undergoes a linear transformation</p>
+<div class="math notranslate nohighlight">
+\[Y = g\bigl(X\bigr) = AX + b\]</div>
+<p>Where <span class="math notranslate nohighlight">\(A\)</span> is a constant <span class="math notranslate nohighlight">\(n x n\)</span> matrix, and <span class="math notranslate nohighlight">\(b\)</span> is a constant <span class="math notranslate nohighlight">\(n\)</span>-element vector</p>
+<p>If <span class="math notranslate nohighlight">\(A\)</span> is invertible, then</p>
+<div class="math notranslate nohighlight">
+\[X = h\bigl(Y\bigr) = A^{-1}Y - A^{-1}b\]</div>
+</section>
+<section id="normality">
+<h4>Normality<a class="headerlink" href="#normality" title="Link to this heading"></a></h4>
+<p>We have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f_{Y}(y) &amp;= |h'(y)|f_{X}\bigl[h(y)\bigr] \\
+         &amp;= |A^{-1}|\frac{1}{(2\pi)^{\frac{n}{2}}\,|C_X|^{\frac{1}{2}}}\;e^{-\tfrac{1}{2}(A^{-1}y - A^{-1}b - \bar{x})^{T}C_X^{-1}(A^{-1}y - A^{-1}b - \bar{x})} \\
+         &amp;= |A^{-1}|\frac{1}{(2\pi)^{\frac{n}{2}}\,|C_X|^{\frac{1}{2}}}\;e^{-\tfrac{1}{2}(A^{-1}y - A^{-1}b - A^{-1}A\bar{x})^{T}C_X^{-1}(A^{-1}y - A^{-1}b - A^{-1}A\bar{x})} \\
+         &amp;= \frac{1}{(2\pi)^{\frac{n}{2}}\,|A||C_X|^{\frac{1}{2}}}\;e^{-\tfrac{1}{2}\bigl[A^{-1}y - A^{-1}\bigl(b - A\bar{x}\bigr)\bigr]^{T}C_X^{-1}\bigl[A^{-1}y - A^{-1}\bigl(b - A\bar{x}\bigr)\bigr]} \\
+         &amp;= \frac{1}{(2\pi)^{\frac{n}{2}}\,{A}^{\frac{1}{2}}|C_X|^{\frac{1}{2}}}|A^{T}|^{\frac{1}{2}}\;e^{-\tfrac{1}{2}(A^{-1}y - A^{-1}\bar{y})^{T}C_X^{-1}(A^{-1}y - A^{-1}\bar{y})} \\
+         &amp;= \frac{1}{(2\pi)^{\frac{n}{2}}\,|AC_XA^{T}|^{\frac{1}{2}}}\;e^{-\tfrac{1}{2}(y - \bar{y})^{T}\bigl(AC_X^{-1}A^{T}\bigr)(y - \bar{y})}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[y \sim N\bigl(A\bar{x} + b, AC_{X}A^{T}\bigr)\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Normality is preserved in linear transformation of random vectors.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="stochatsic-processes">
+<h2>Stochatsic processes<a class="headerlink" href="#stochatsic-processes" title="Link to this heading"></a></h2>
+<p>A stochastic process <span class="math notranslate nohighlight">\(X(t)\)</span> is an RV <span class="math notranslate nohighlight">\(X\)</span> that changes with time.</p>
+<section id="types-of-stochastic-processes">
+<h3>Types of stochastic processes<a class="headerlink" href="#types-of-stochastic-processes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Continuous random process:</strong> is a random process that the RV at each time is continuous and time is continuous</p></li>
+<li><p><strong>Discrete random process:</strong> is a random process that the RV at each time is discrete and time is continuous</p></li>
+<li><p><strong>Continuous random sequence:</strong> is a random process that the RV at each time is continuous and time is discrete</p></li>
+<li><p><strong>Discrete random sequence:</strong> is a random process that the RV at each time is discrete and time is discrete</p></li>
+</ul>
+</section>
+<section id="pdf">
+<h3>PDF<a class="headerlink" href="#pdf" title="Link to this heading"></a></h3>
+<p>The PDF of <span class="math notranslate nohighlight">\(X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[F_{X}(x, t) = P\bigl[X(t) \le x\bigr]\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <span class="math notranslate nohighlight">\(X(t)\)</span> is a random vector, then the inequality above is an element-by element inequality</p>
+</div>
+</section>
+<section id="id1">
+<h3>CDF<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The CDF of <span class="math notranslate nohighlight">\(X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[f_{X}(x, t) = \frac{dF_{X}(x, t)}{dx}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <span class="math notranslate nohighlight">\(X(t)\)</span> is a random vector, then the derivative above is taken once with respect to each element of <span class="math notranslate nohighlight">\(x\)</span></p>
+</div>
+</section>
+<section id="mean">
+<h3>Mean<a class="headerlink" href="#mean" title="Link to this heading"></a></h3>
+<p>The mean of <span class="math notranslate nohighlight">\(X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\bar{x}(t) = \int_{-\infty}^{\infty}xf(x, t)dx\]</div>
+</section>
+<section id="id2">
+<h3>Covariance<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>The covariance of <span class="math notranslate nohighlight">\(X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+C_X(t) &amp;= E\bigl[(X(t)-\bar{x}(t))(X(t)-\bar{x}(t))^{T}\bigr] \\
+       &amp;= \int_{\mathbb{R}^n} \bigl[x-\bar{x}(t)\bigr]\bigl[x-\bar{x}(t)\bigr]^{T}\,f_X(x,t)\,dx
+\end{aligned}\end{split}\]</div>
+</section>
+<section id="joint-distribution">
+<h3>Joint distribution<a class="headerlink" href="#joint-distribution" title="Link to this heading"></a></h3>
+<section id="second-order-pdf">
+<h4>Second-order PDF<a class="headerlink" href="#second-order-pdf" title="Link to this heading"></a></h4>
+<p>The second-order PDF of <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[F(x_{1}, x_{2}, t_{1}, t_{2}) = P\bigl(X(t_{1}) \le x_{1}, X(t_{2}) \le x_{2}\bigr)\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <span class="math notranslate nohighlight">\(X(t)\)</span> is a random vector, then the inequality above consists of <span class="math notranslate nohighlight">\(2n\)</span> inequalities</p>
+</div>
+</section>
+<section id="second-order-cdf">
+<h4>Second-order CDF<a class="headerlink" href="#second-order-cdf" title="Link to this heading"></a></h4>
+<p>The second-oder CDF of <span class="math notranslate nohighlight">\(X\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[f(x_{1}, x_{2}, t_{1}, t_{2}) = \frac{\partial^{2}F(x_{1}, x_{2}, t_{1}, t_{2})}{\partial x_{1} \partial x_{2}}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <span class="math notranslate nohighlight">\(X(t)\)</span> is a random vector, the derivative above consists of <span class="math notranslate nohighlight">\(2n\)</span> derivatives</p>
+</div>
+</section>
+<section id="id3">
+<h4>Autocorrelation<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<p>The correlation between two RVs <span class="math notranslate nohighlight">\(X(t_{1})\)</span> and <span class="math notranslate nohighlight">\(X(t_{2})\)</span> is called the autocorrelation of the stochastic process <span class="math notranslate nohighlight">\(X(t)\)</span></p>
+<div class="math notranslate nohighlight">
+\[R_{X}(t_{1}, t_{2}) = E\bigl[X(t_{1})X^{T}(t_{2})\bigr]\]</div>
+</section>
+<section id="id4">
+<h4>Autocovariance<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>The autocovariance of a stochastic process is defined as</p>
+<div class="math notranslate nohighlight">
+\[C_{X}(t_{1}, t_{2}) = E\bigl[\bigl(X(t_{1}) - \bar{X}(t_{1})\bigr)\bigl(X(t_{2}) - \bar{X}(t_{2})\bigr)^{T}\bigr]\]</div>
+</section>
+</section>
+<section id="strict-sense-stationary-process-sss">
+<h3>Strict-sense stationary process: SSS<a class="headerlink" href="#strict-sense-stationary-process-sss" title="Link to this heading"></a></h3>
+<p>Strict-sense stationary (SSS) stochastic process is a stochastic process for which the PDF does not change with time.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The mean of the stationary stochastic process is constant with respect to time, and the autocorrelation is a function of the time difference <span class="math notranslate nohighlight">\(t_{2} - t_{1}\)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\bar{x} &amp;= E\bigl[X(t)\bigr] \\
+R_X(t_{2} - t_{1}) &amp;= E\bigl[X(t_{1})X^{T}(t_{2})\bigr]
+\end{aligned}\end{split}\]</div>
+</section>
+<section id="wide-sense-stationary-process-wss">
+<h3>Wide-sense stationary process: WSS<a class="headerlink" href="#wide-sense-stationary-process-wss" title="Link to this heading"></a></h3>
+<p>Wide-sense stationary (WSS) stachastic process is a stochastic process for which the PDF changes with time, but the mean is constant with resepct to time and the autocorrelation is a function of the time difference.</p>
+<p>From the definition of autocorrelation, it can be shown taht for WSS process the following propeties hold</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+R_{X}(0) &amp;= E\bigl[X(t)X^{T}(t)\bigr] \\
+R_{X}(-\tau) &amp;= R_{X}(\tau)
+\end{aligned}\end{split}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A stationary process is wide-sense srarionary, but a wide-sense stationary process may or may not be stationary</p>
+</div>
+<p>For scalar stichastic processes, it can be shown that</p>
+<div class="math notranslate nohighlight">
+\[|R_{X}(\tau)| \le R_{X}(0)\]</div>
+</section>
+<section id="ergodic-process">
+<h3>Ergodic process<a class="headerlink" href="#ergodic-process" title="Link to this heading"></a></h3>
+<p>Suppose we have a stochastic process <span class="math notranslate nohighlight">\(X(t)\)</span></p>
+<p>Suppose that the process has a realization <span class="math notranslate nohighlight">\(x(t)\)</span></p>
+<p>The time average of <span class="math notranslate nohighlight">\(X(t)\)</span> is defined, in continuous-time random processes, as</p>
+<div class="math notranslate nohighlight">
+\[A\bigl[X(t)\bigr] = \lim_{T \to \infty} \frac{1}{2T}\int_{-T}^{T}x(t)dt\]</div>
+<p>The time autocorrelation of <span class="math notranslate nohighlight">\(X(t)\)</span> is defined, in continuouse-time random processes, as</p>
+<div class="math notranslate nohighlight">
+\[R\bigl[X(t), \tau\bigr] = A\bigl[X(t)X^{T}(t + \tau)\bigr]\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Discrete-time random processes are straightforward extensions of the continuous-timer random processes</p>
+</div>
+<p>An ergodic process is a stationary random process for which</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+E\bigl(X\bigr) &amp;= A\bigl[X(t)\bigr] \\
+R_{X}(\tau) &amp;= R\bigl[X(t), \tau\bigr]
+\end{aligned}\end{split}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If the random process is ergodic, then we can use those time averages to estimate the statistics of the stochastic process</p>
+</div>
+</section>
+<section id="cross-correlation-and-cross-covariance">
+<h3>Cross correlation and cross covariance<a class="headerlink" href="#cross-correlation-and-cross-covariance" title="Link to this heading"></a></h3>
+<p>The cross correlation of <span class="math notranslate nohighlight">\(X(t)\)</span> and <span class="math notranslate nohighlight">\(Y(t)\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[R_{XY}(t_{1}, t_{2}) = E\bigl[X(t_{1})Y^{T}(t_{2})\bigr]\]</div>
+<p>Two random processes <span class="math notranslate nohighlight">\(X(t)\)</span> and <span class="math notranslate nohighlight">\(Y(t)\)</span> are said to be uncorrelated if <span class="math notranslate nohighlight">\(R_{XY}(t_{1}, t_{2}) = E\bigl[X(t_{1})\bigr]E\bigl[Y^{T}(t_{2})\bigr]\)</span> for all <span class="math notranslate nohighlight">\(t_{1}\)</span> and <span class="math notranslate nohighlight">\(t_{2}\)</span></p>
+<p>The cross covariance of <span class="math notranslate nohighlight">\(X(t)\)</span> and <span class="math notranslate nohighlight">\(Y(t)\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[C_{XY}(t_{1}, t_{2}) = E\bigl[\bigl(X(t_{1}) - \bar{X}(t_{1})\bigr)\bigl(Y(t_{2}) - \bar{Y}(t_{2})\bigr)^{T}\bigr]\]</div>
+</section>
+</section>
+<section id="white-noise-and-colored-noise">
+<h2>White noise and colored noise<a class="headerlink" href="#white-noise-and-colored-noise" title="Link to this heading"></a></h2>
+<p>If the RV <span class="math notranslate nohighlight">\(X(t_{1})\)</span> is independent from the RV <span class="math notranslate nohighlight">\(X(t_{2})\)</span> for all <span class="math notranslate nohighlight">\(t_{1} \neq t_{2}\)</span>, then <span class="math notranslate nohighlight">\(X(t)\)</span> is called white noise; otherwise, <span class="math notranslate nohighlight">\(X(t)\)</span> is called colored noise</p>
+<p>The power spectrum <span class="math notranslate nohighlight">\(S_{X}(\omega)\)</span> of a wide-sense stationaru stochastic process <span class="math notranslate nohighlight">\(X(t)\)</span> is defined as the Fourier trnasform os the autocorrelation.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+S_{X}(\omega) &amp;= \int_{-\infty}^{\infty}R_{X}(\tau)e^{-j\omega\tau}d\tau \\
+R_{X}(\tau) &amp;= \frac{1}{2\pi}\int_{-\infty}^{\infty}S_{X}(\omega)e^{j\omega\tau}d\omega
+\end{aligned}\end{split}\]</div>
+<p>These equations are called the Wiener-Khintchine relations after Norbert Wiener anf Aleksandr Khinchin.</p>
+<p>The power of a wide-sense stationaru stochastic process is defined as</p>
+<div class="math notranslate nohighlight">
+\[P_{X} = \frac{1}{2\pi}\int_{-\infty}^{\infty}S_{X}(\omega)d\omega\]</div>
+<p>The cross correlation of a wide-sense stationary stochastic process is the inverse Fourier transform of the cross power spectrum of two wide-sense stationary stochastic processes <span class="math notranslate nohighlight">\(X(t)\)</span> and <span class="math notranslate nohighlight">\(Y(t)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+S_{XY}(\omega) &amp;= \int_{-\infty}^{\infty}R_{XY}(\tau)e^{-j\omega\tau}d\tau \\
+R_{XY}(\tau) &amp;= \frac{1}{2\pi}\int_{-\infty}^{\infty}S_{XY}(\omega)d^{j\omega\tau}d\omega
+\end{aligned}\end{split}\]</div>
+<p>The power spectrum of a discrete-time random process is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+S_{X}(\omega) &amp;= \sum_{k = -\infty}^{\infty}R_{X}(k)e^{-j\omega k}, \omega \in [-\pi, \pi] \\
+R_{X}(k) &amp;= \frac{1}{2\pi}\int_{-\infty}^{\infty}S_{X}(\omega)e^{j\omega k}d\omega
+\end{aligned}\end{split}\]</div>
+<p>A discrete-time stochastic process <span class="math notranslate nohighlight">\(X(t)\)</span> is called wite noise if</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_{X}(k) = \begin{cases}
+           \sigma^2, k=0 \\
+           0, k\neq 0
+           \end{cases}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\delta_{k}\)</span> is the kronecker delta function, defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta_{k} = \begin{cases}
+             1, k = 0 \\
+             0, k \neq 0
+             \end{cases}\end{split}\]</div>
+<p>If <span class="math notranslate nohighlight">\(X(t)\)</span> is a dicrete-time white noise process, then the RV <span class="math notranslate nohighlight">\(X(n)\)</span> is uncorrelated with <span class="math notranslate nohighlight">\(X(m)\)</span> unless <span class="math notranslate nohighlight">\(m = n\)</span></p>
+<p>The power of a discrete-time white noise process is equal at all frequencies</p>
+<div class="math notranslate nohighlight">
+\[S_{X}(\omega) = R_{X}(0), \omega \in [-\pi, \pi]\]</div>
+<p>For a continuous-time random process, white noise has equal power at all frequencies</p>
+<div class="math notranslate nohighlight">
+\[S_{X}(\omega) = R_{X}(0)\]</div>
+<p>Substitute this expression for <span class="math notranslate nohighlight">\(S_{X}(\omega)\)</span> into <span class="math notranslate nohighlight">\(R_{X}(\tau)\)</span>, then for continuous-time white noise</p>
+<div class="math notranslate nohighlight">
+\[R_{X}(\tau) = R_{X}(0)\delta(\tau)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\delta(\tau)\)</span> is the continuous-time impulse function</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>Suppose that a zero-mean stationary stochsatic process has the autocoreelation function</p>
+<div class="math notranslate nohighlight">
+\[R_{X}(\tau) = \sigma^{2}e^{-\beta|\tau|}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\beta\)</span> is a positive real number</p>
+<p>The power spectrum is computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+S_{X}(\omega) &amp;= \int_{-\infty}^{\infty}\sigma^{2}e^{-\beta|\tau|}e^{-j\omega\tau}d\tau \\
+              &amp;= \int_{-\infty}^{0}\sigma^{2}e^{(\beta - j\omega)\tau}d\tau + \int_{0}^{\infty}\sigma^{2}e^{-(\beta + j\omega)\tau}d\tau \\
+              &amp;= \frac{\sigma^{2}}{\beta - j\omega} + \frac{\sigma^{2}}{\beta + j\omega} \\
+              &amp;= \frac{2\sigma^{2}\beta}{\omega^{2} + \beta^{2}}
+\end{aligned}\end{split}\]</div>
+<p>The variance of stochastic process is computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+E\bigl[X^{2}(t)\bigr] &amp;= \frac{1}{2\pi}\int_{-\infty}^{\infty}\frac{2\sigma^{2}\beta}{\omega^{2} + \beta^{2}}\,d\omega \\
+                      &amp;= \frac{\sigma^{2}\beta}{\pi}\left[\frac{1}{\beta}\arctan\left(\frac{\omega}{\beta}\right)\right]_{-\infty}^{\infty} \\
+                      &amp;= \sigma^{2} \\
+                      &amp;= R_{X}(0)
+\end{aligned}\end{split}\]</div>
+</section>
 </section>
 </section>
 
@@ -156,7 +648,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="kalman_filter_implementation.html" class="btn btn-neutral float-right" title="Kalman Filter Implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="least_square_estimation.html" class="btn btn-neutral float-right" title="Least Square Estimation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
