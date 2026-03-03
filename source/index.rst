@@ -11,19 +11,20 @@ Add your content using ``reStructuredText`` syntax. See the
 documentation for details.
 
 Introdutory
------------
+===========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    introduction
    probability
+   least_square_estimation
 
 Kalman Filter
--------------
+=============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    kalman_filter_implementation
    extended_kalman_filter
