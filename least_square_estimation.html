@@ -16,6 +16,7 @@
       <script src="_static/documentation_options.js?v=2709fde1"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -45,7 +46,18 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="probability.html">Probability</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Least Square Estimation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Least Square Estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#estimation-of-a-constant">Estimation of a constant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#weighted-least-squares-estimation">Weighted least squares estimation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#recursive-least-squares-estimation">Recursive least squares estimation</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kalman_filter_implementation.html">Kalman Filter Implementation</a></li>
@@ -78,6 +90,360 @@
              
   <section id="least-square-estimation">
 <h1>Least Square Estimation<a class="headerlink" href="#least-square-estimation" title="Link to this heading"></a></h1>
+<section id="estimation-of-a-constant">
+<h2>Estimation of a constant<a class="headerlink" href="#estimation-of-a-constant" title="Link to this heading"></a></h2>
+<p>Suppose <span class="math notranslate nohighlight">\(x\)</span> is a constant but unknown n-element vector, and <span class="math notranslate nohighlight">\(y\)</span> is a k-element noisy measurement vector</p>
+<p>Assume that each element of the measurement vector <span class="math notranslate nohighlight">\(y\)</span> is a linear combination of the elements of <span class="math notranslate nohighlight">\(x\)</span> with the addition of some measurement noise</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+y_{1} &amp;= H_{11}x_{1} + \cdots + H_{1n}x_{n} + v_{1} \\
+\vdots \\
+y_{k} &amp;= H_{k1}x_{1} + \cdots + H_{kn}x_{n} + v_{k}
+\end{aligned}\end{split}\]</div>
+<p>This set of equations can be put into matrix form as</p>
+<div class="math notranslate nohighlight">
+\[y = Hx + v\]</div>
+<p>Defined <span class="math notranslate nohighlight">\(\epsilon_{k}\)</span> as the difference between the noisy measurements and the vector <span class="math notranslate nohighlight">\(H\hat{x}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\epsilon_{y} = y - H\hat{x}\]</div>
+<p><span class="math notranslate nohighlight">\(\epsilon_{y}\)</span> is called the measurement residual</p>
+<p>The most probable value of the vector <span class="math notranslate nohighlight">\(x\)</span> is the vector <span class="math notranslate nohighlight">\(\hat{x}\)</span> that minimizes the sum of square between the observed values <span class="math notranslate nohighlight">\(y\)</span> and the vector <span class="math notranslate nohighlight">\(H\hat{x}\)</span></p>
+<p>We will be computing the <span class="math notranslate nohighlight">\(\hat{x}\)</span> that minimizes the cost function</p>
+<p>The cost function <span class="math notranslate nohighlight">\(J\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+J &amp;= \epsilon_{y1}^{2} + \cdots + \epsilon_{yk}^{2} \\
+  &amp;= \epsilon_{y}^{T}\epsilon_{y}
+\end{aligned}\end{split}\]</div>
+<p>Substitute <span class="math notranslate nohighlight">\(\epsilon_{y}\)</span> into <span class="math notranslate nohighlight">\(J\)</span>, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+J &amp;= (y - H\hat{x})^{T}(y - H\hat{x}) \\
+  &amp;= y^{T}y - \hat{x}^{T}H^{T}y - y^{T}H\hat{x} + \hat{x}^{T}H^{T}\hat{x}
+\end{aligned}\end{split}\]</div>
+<p>Then</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial J}{\partial \hat{x}} = -y^{T}H - y^{T}H + 2\hat{x}^{T}H^{T}H\]</div>
+<p>Set</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial J}{\partial \hat{x}} = 0\]</div>
+<p>We have</p>
+<div class="math notranslate nohighlight">
+\[-y^{T}H - y^{T}H + 2\hat{x}^{T}H^{T}H = 0\]</div>
+<p>Solve for <span class="math notranslate nohighlight">\(\hat{x}\)</span>, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+H^{T}y &amp;= H^{T}H\hat{x} \\
+\hat{x} &amp;= \bigl(H^{T}H\bigr)^{-1}H^{T}y\\
+        &amp;= H^{L}y
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(H_{L}\)</span> the left pseudo inverse of <span class="math notranslate nohighlight">\(H\)</span>, exists if <span class="math notranslate nohighlight">\(k \ge n\)</span> and <span class="math notranslate nohighlight">\(H\)</span> is gull rank</p>
+<p>This means that the number of measurements <span class="math notranslate nohighlight">\(k\)</span> is greater than the number of variables <span class="math notranslate nohighlight">\(n\)</span> that we are trying to estimate, and the measurements are linearly independent</p>
+<p>To prove that we found the minimum rather than some other type of stationary point, we need to prove that the second derivative of <span class="math notranslate nohighlight">\(J\)</span> is positiive semidefinite</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>We are trying to estimate the resistance <span class="math notranslate nohighlight">\(x\)</span> of an unmarked resistor on the basis of <span class="math notranslate nohighlight">\(k\)</span> noisy measurements from a multimeter</p>
+<p><span class="math notranslate nohighlight">\(x\)</span> is a scalar, so <span class="math notranslate nohighlight">\(k\)</span> noisy measurements are given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+y_{1} &amp;= x + v_{1}\\
+\vdots \\
+y_{k} &amp;= x + v_{k}
+\end{aligned}\end{split}\]</div>
+<p>It can be written in matrix form as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+y_{1} \\
+\vdots \\
+y_{k}
+\end{bmatrix} =  \begin{bmatrix}
+                1 \\
+                \vdots \\
+                1
+                \end{bmatrix} x
+                +
+                \begin{bmatrix}
+                v_1 \\
+                \vdots \\
+                v_k
+                \end{bmatrix}\end{split}\]</div>
+<p>The optimal estimate of the resistance <span class="math notranslate nohighlight">\(x\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\hat{x} &amp;= \bigl(H^{T}H\bigr)^{-1}H^{T}y \\
+        &amp;= \left(\begin{bmatrix}
+                 1 &amp; \cdots &amp; 1
+                 \end{bmatrix}
+                 \begin{bmatrix}
+                 1 \\
+                 \vdots \\
+                 1
+                 \end{bmatrix}\right)^{-1}
+                 \begin{bmatrix}
+                 1 &amp; \cdots &amp; 1
+                 \end{bmatrix}
+                 \begin{bmatrix}
+                 y_{1} \\
+                 \vdots \\
+                 y_{k}
+                 \end{bmatrix} \\
+        &amp;= \frac{1}{k}\bigl(y_{1} + \cdots + y_{k}\bigr)
+\end{aligned}\end{split}\]</div>
+</section>
+</section>
+<section id="weighted-least-squares-estimation">
+<h2>Weighted least squares estimation<a class="headerlink" href="#weighted-least-squares-estimation" title="Link to this heading"></a></h2>
+<p>Suppose <span class="math notranslate nohighlight">\(x\)</span> is aconstant but unknown n-element vector</p>
+<p>And <span class="math notranslate nohighlight">\(y\)</span> is a k-element noisy measurement vector</p>
+<p>Assume that each element of <span class="math notranslate nohighlight">\(y\)</span> is a linear combination of the elements of <span class="math notranslate nohighlight">\(x\)</span> with the addition of some measurement noise</p>
+<p>The variance of the measurement noise may be different of each element of <span class="math notranslate nohighlight">\(k\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{bmatrix}
+y_{1} \\
+\vdots \\
+y_{k}
+\end{bmatrix} &amp;= \begin{bmatrix}
+                 H_{11} &amp; \cdots &amp; H_{1n} \\
+                 \vdots &amp; \ddots &amp; \vdots \\
+                 H_{k1} &amp; \cdots &amp; H_{kn}
+                 \end{bmatrix}
+                 \begin{bmatrix}
+                 x_{1} \\
+                 \vdots \\
+                 x_{n}
+                 \end{bmatrix}
+                 +
+                 \begin{bmatrix}
+                 v_{1} \\
+                 \vdots \\
+                 v_{k}
+                 \end{bmatrix} \\
+E\bigl(v_{i}^{2}\bigr) &amp;= \sigma_{i}^{2}, i = 1, 2, \cdots, k
+\end{aligned}\end{split}\]</div>
+<p>Assume that the noise for each measurement is zero-mean and independent</p>
+<p>The measurement covariance matrix is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+R &amp;= E\bigl(vv^{T}\bigr)
+  &amp;= \begin{bmatrix}
+     \sigma_{1}^{2} &amp; \cdots &amp; 0 \\
+     \vdots &amp; \ddots&amp; \vdots \\
+     0 &amp; \cdots &amp; \sigma_{k}^{2}
+     \end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>Minimize the cost function with respect to <span class="math notranslate nohighlight">\(\hat{x}\)</span></p>
+<div class="math notranslate nohighlight">
+\[J = \frac{\epsilon_{y1}^{2}}{\sigma_{1}^{2}} + \cdots + \frac{\epsilon_{yk}^{2}}{\sigma_{k}^{2}}\]</div>
+<p>If <span class="math notranslate nohighlight">\(y_{1}\)</span> is a relatively noisy measurement, then we do not care much about minizing the difference between <span class="math notranslate nohighlight">\(y_{1}\)</span> and the first element of <span class="math notranslate nohighlight">\(H\hat{x}\)</span> because we do not have much confidence in <span class="math notranslate nohighlight">\(y_{1}\)</span></p>
+<p>We will minimize the weighted sum of squares instead</p>
+<p>The cost function can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+J &amp;= \epsilon_{y}^{T}R^{-1}\epsilon_{y} \\
+  &amp;= (y - H\hat{x})^{T}R^{-1}(y - H\hat{x}) \\
+  &amp;= y^{T}R^{-1}y - \hat{x}^{T}H^{T}R^{-1}y - y^{T}R^{-1}H\hat{x} + \hat{x}^{T}H^{T}R^{-1}H\hat{x}
+\end{aligned}\end{split}\]</div>
+<p>Then</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial J}{\partial \hat{x}} = -y^{T}R^{-1}H + \hat{x}^{T}H^{T}R^{-1}H\]</div>
+<p>Set</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial J}{\partial \hat{x}} = 0\]</div>
+<p>Compute <span class="math notranslate nohighlight">\(\hat{x}\)</span>, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+0 &amp;= -y^{T}R^{-1}H + \hat{x}^{T}H^{T}R^{-1}H \\
+H^{T}R^{-1}y &amp;= H^{T}R^{-1}H\hat{x} \\
+\hat{x} &amp;= \bigl(H^{T}R^{-1}H\bigr)^{-1}H^{T}R^{-1}y
+\end{aligned}\end{split}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This method requires that the measurement noise matrix <span class="math notranslate nohighlight">\(R\)</span> be nonsingular, or each of the measurements <span class="math notranslate nohighlight">\(y_{i}\)</span> must be correupted by at least some noise</p>
+</div>
+<section id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>We are estimating the resistance <span class="math notranslate nohighlight">\(x\)</span> ofan unmarked resistor on the basis of <span class="math notranslate nohighlight">\(k\)</span> noisy measurements from a multimeter</p>
+<p><span class="math notranslate nohighlight">\(x\)</span> is a scalar, so <span class="math notranslate nohighlight">\(k\)</span> noisy measurements are given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+y_{i} &amp;= x + v_{i} \\
+E\bigl(v_{i}^{2}\bigr) &amp;= \sigma_{i}^{2}, i = 1, 2, \cdots, k
+\end{aligned}\end{split}\]</div>
+<p>or in matrix form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+y_{1} \\
+\vdots \\
+y_{k}
+\end{bmatrix} = \begin{bmatrix}
+                1 \\
+                \vdots \\
+                1
+                \end{bmatrix} x
+                +
+                \begin{bmatrix}
+                v_{1} \\
+                \vdots \\
+                v_{k}
+                \end{bmatrix}\end{split}\]</div>
+<p>The measurement noise covariance is given as</p>
+<div class="math notranslate nohighlight">
+\[R = diag\bigl(\sigma_{1}^{2}, \cdots, \sigma_{k}^{2}\bigr)\]</div>
+<p>The optimal estimate of the resistance <span class="math notranslate nohighlight">\(x\)</span> is givan as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\hat{x} &amp;= \bigl(H^{T}R^{-1}H\bigr)^{-1}H^{T}R^{-1}y \\
+        &amp;= \left(
+           \begin{bmatrix}
+           1 &amp; \cdots &amp; 1
+           \end{bmatrix}
+           \begin{bmatrix}
+           \sigma_{1}^{2} &amp; \cdots &amp; 0 \\
+           \vdots &amp; \ddots &amp; \vdots \\
+           0 &amp; \cdots &amp; \sigma_{k}^{2}
+           \end{bmatrix}^{-1}
+           \begin{bmatrix}
+           1 \\
+           \vdots \\
+           1
+           \end{bmatrix}
+           \right)^{-1}
+           \times
+           \begin{bmatrix}
+           1 &amp; \cdots &amp; 1
+           \end{bmatrix}
+           \begin{bmatrix}
+           \sigma_{1}^{2} &amp; \cdots &amp; 0 \\
+           \vdots &amp; \ddots &amp; \vdots \\
+           0 &amp; \cdots &amp; \sigma_{k}^{2}
+           \end{bmatrix}^{-1}
+           \begin{bmatrix}
+           y_{1} \\
+           \vdots \\
+           y_{k}
+           \end{bmatrix} \\
+        &amp;= \left(\sum \frac{1}{\sigma_{i}^{2}}\right)^{-1} \left(\frac{y_{1}}{\sigma_{1}^{2}} + \cdots + \frac{y_{k}}{\sigma_{k}^{2}}\right)
+\end{aligned}\end{split}\]</div>
+</section>
+</section>
+<section id="recursive-least-squares-estimation">
+<h2>Recursive least squares estimation<a class="headerlink" href="#recursive-least-squares-estimation" title="Link to this heading"></a></h2>
+<p>In weighted least squares estimation, we can compute <span class="math notranslate nohighlight">\(\hat{x}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\hat{x} = \bigl(H^{T}R^{-1}H\bigr)^{-1}H^{T}R^{-1}y\]</div>
+<p>The <span class="math notranslate nohighlight">\(H\)</span> matrix is a <span class="math notranslate nohighlight">\(k\times n\)</span> matrix</p>
+<p>If we obtain measurements sequantially and want to update our estimate of <span class="math notranslate nohighlight">\(x\)</span> with each new measurement, we need to augment <span class="math notranslate nohighlight">\(H\)</span> matrix and completely recompute the estimate <span class="math notranslate nohighlight">\(\hat{x}\)</span></p>
+<p>If the number of measurements become large, the computational effort could become prohittive</p>
+<p>The computational effort of least squares estimation can rapidly outgrpw our resoucres</p>
+<p>We will rework our leats squares estimation recursively</p>
+<p>Suppose we have <span class="math notranslate nohighlight">\(\hat{x}\)</span> after <span class="math notranslate nohighlight">\(k - 1\)</span> measurements</p>
+<p>We obtain new measurement <span class="math notranslate nohighlight">\(y_{k}\)</span></p>
+<p>A linear recursive estimator can be written in the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+y_{k} &amp;= H_{k}x + v_{k} \\
+\hat{x}_{k} &amp;= \hat{x}_{k - 1} + K_{k}(y_{k} - H_{k}\hat{x}_{k - 1})
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(K_{k}\)</span> is the estimator gain matrix and <span class="math notranslate nohighlight">\(y_{k} - H_{k}\hat{x}_{k - 1}\)</span> is the correction term</p>
+<p>If the correction term is zero, or if the gain matrix is zero, the estimate does not change from time step <span class="math notranslate nohighlight">\(k - 1\)</span> to <span class="math notranslate nohighlight">\(k\)</span></p>
+<p>The estimation error mean can be computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+E(\epsilon_{x, k}) &amp;= E(x - \hat{x}) \\
+                   &amp;= E\bigl[x -\hat{x}_{k - 1} - K_{k}(y_{k} - H_{k}\hat{x}_{k - 1})\bigr] \\
+                   &amp;= E\bigl[\epsilon_{x, k - 1} - K_{k}\bigl(H_{k}x + v_{k} = H_{k}\hat{x}_{k - 1}\bigr)\bigr] \\
+                   &amp;= E\bigl[\epsilon_{x, k - 1} - K_{k}H_{k}(x_{k} - \hat{x}_{k - 1}) - K_{k}v_{k}\bigr] \\
+                   &amp;= \bigl(I - K_{k}H_{k}\bigr)E(\epsilon_{x, k - 1}) - K_{k}E(v_{k})
+\end{aligned}\end{split}\]</div>
+<p>If <span class="math notranslate nohighlight">\(E(v_{k}) = 0\)</span> and <span class="math notranslate nohighlight">\(E(\epsilon_{x, k - 1}) = 0\)</span>, then <span class="math notranslate nohighlight">\(E(\epsilon_{x, k}) = 0\)</span></p>
+<p>That is; if the measurement noise is zero-mean, and the initial estimate fo <span class="math notranslate nohighlight">\(x\)</span> is set equal to the exprected value of <span class="math notranslate nohighlight">\(x\)</span>, then the expected values of <span class="math notranslate nohighlight">\(\hat{x}_{k}\)</span> will be equal to <span class="math notranslate nohighlight">\(x_{K}\)</span></p>
+<p>Then, the estimator of <span class="math notranslate nohighlight">\(x\)</span> is an unbiased estimator</p>
+<p>This property holds regardless of the value of the gain matrix</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>On average, the estimate <span class="math notranslate nohighlight">\(\hat{x}\)</span> will be equal to the true value <span class="math notranslate nohighlight">\(x\)</span></p>
+</div>
+<p>We will be determining the optimal value of the gain matrix</p>
+<p>Since the estimator is unbiased, we will minimize the sum of the variances of the estimation errors at time <span class="math notranslate nohighlight">\(k\)</span></p>
+<p>The cost function is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+J_{k} &amp;= E\bigl[(x_{1} - \hat{x}_{1})^{2}\bigr] + \cdots + E\bigl[(x_{n} - \hat{x}_{n})^{2}\bigr] \\
+      &amp;= E\bigl(\epsilon_{x1, k}^{2} + \cdots + \epsilon_{xn, k}^{2}\bigr) \\
+      &amp;= E\bigl(\epsilon_{x, k}^{T}\epsilon_{x, k}\bigr) \\
+      &amp;= E\bigl[Tr\bigl(\epsilon_{x, k}\epsilon_{x, k}^{T}\bigr)\bigr] \\
+      &amp;= Tr\bigl(P_{k}\bigr)
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_{k}\)</span> is the estimation-error covariance</p>
+<p>The recursive calculation of <span class="math notranslate nohighlight">\(P_{k}\)</span> is given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+P_{k} &amp;= E\bigl(\epsilon_{x, k}\epsilon_{x, k}^{T}\bigr) \\
+      &amp;= E\bigl[\bigl(\bigl(I - K_{k}H_{k}\bigr)\epsilon_{x, k - 1} - K_{k}v_{k}\bigr)\bigl(\bigl(I - K_{k}H_{k}\bigr)\epsilon_{x, k - 1} - K_{k}v_{k}\bigr)^{T}\bigr] \\
+      &amp;= \bigl(I - K_{k}H_{k}\bigr)E\bigl(\epsilon_{x, k - 1}\epsilon_{x, k - 1}^{T}\bigr)\bigl(I - K_{k}H_{k}\bigr)^{T} - K_{k}E\bigl(v_{k}\epsilon_{x, k - 1}^{T}\bigr)\bigl(I - K_{k}H_{k}\bigr)^{T} \\
+      &amp;- \bigl(I - K_{k}H_{k}\bigr)E\bigl(\epsilon_{x, k - 1}v_{k}^{T}\bigr)K_{k}^{T} + K_{k}E\bigl(v_{k}v_{k}^{T}\bigr)K_{k}^{T}
+\end{aligned}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\epsilon_{x, k - 1}\)</span> is dependent of <span class="math notranslate nohighlight">\(v_{k}\)</span></p>
+<p>Then</p>
+<div class="math notranslate nohighlight">
+\[E\bigl(v_{k}\epsilon_{x, k - 1}^{T}\bigr) = E(v_{k})E(\epsilon_{x, k - 1}) = 0\]</div>
+<p>Since both expected values are zero, then</p>
+<div class="math notranslate nohighlight">
+\[P_{k} = \bigl(I - K_{k}H_{k}\bigr)P_{k - 1}\bigl(I - K_{k}H_{k}\bigr)^{T} + K_{k}R_{k}K_{k}^{T}\]</div>
+<p>where <span class="math notranslate nohighlight">\(R_{k}\)</span> is the covariance of <span class="math notranslate nohighlight">\(v_{k}\)</span></p>
+<p>Assume that <span class="math notranslate nohighlight">\(P_{k - 1}\)</span> and <span class="math notranslate nohighlight">\(R_{k}\)</span> are positive definited, then <span class="math notranslate nohighlight">\(P_{k}\)</span> is positive definited</p>
+<p>We will compute the value of <span class="math notranslate nohighlight">\(K_{k}\)</span></p>
+<p>The mean of the estimation error is zero, then the estimation error will be zero-mean and consistently zero</p>
+<p>From the cost function, using the property fo partial deriavtive of trace of matrix and chain rule, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial J_{k}}{\partial K_{k}} = 2\bigl(I - K_{k}H_{k}\bigr)P_{k - 1}\bigl(-H_{k}^{T}\bigr) + 2K_{k}R_{k}\]</div>
+<p>Set this derivative to zero, solve for <span class="math notranslate nohighlight">\(K_{k}\)</span>, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+K_{k}R_{k} &amp;= \bigl(I - K_{k}H_{k}\bigr)P_{k - 1}H_{k}^{T} \\
+K_{k}\bigl(R_{k} + H_{k}P_{k - 1}H_{k}^{T} &amp;= P_{k - 1}H_{k}^{T} \\
+K_{k} &amp;= P_{k - 1}H_{k}^{T}\bigl(H_{k}P_{k - 1}H_{k}^{T} + R_{k}\bigr)^{-1}
+\end{aligned}\end{split}\]</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Recursive leat squares estimation</strong></p>
+<p>Initialize the estimator as follows</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\hat{x}_{0} &amp;= E(x) \\
+P_{0} &amp;= E\bigl[(x- \hat{x}_{0})(x - \hat{x}_{0})^{T}\bigr]
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+<ul class="simple">
+<li><p>If no knowledge about <span class="math notranslate nohighlight">\(x\)</span> is available =, then <span class="math notranslate nohighlight">\(P_{0} = \infty I\)</span></p></li>
+<li><p>If perfect knowledge about <span class="math notranslate nohighlight">\(x\)</span> is available, then <span class="math notranslate nohighlight">\(P_{0} = 0\)</span></p></li>
+</ul>
+<p>For <span class="math notranslate nohighlight">\(k = 1, 2, \cdots\)</span>, perform</p>
+<ul>
+<li><p>Obtain the measurement <span class="math notranslate nohighlight">\(y_{k}\)</span>, assuming that <span class="math notranslate nohighlight">\(y_{k}\)</span> is give by</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[y_{k} = H_{k}x + v_{k}\]</div>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(v_{k}\)</span> is a zero-mean random vector with covariance <span class="math notranslate nohighlight">\(R_{k}\)</span></p>
+<p>Assume that the measurement noise at each time step <span class="math notranslate nohighlight">\(k\)</span> is independent, that is, <span class="math notranslate nohighlight">\(E(v_{i}v_{k}) = R_{k}\delta_{k - 1}\)</span></p>
+<p>This implies that the measurement noise is white</p>
+</li>
+<li><p>Update the estimate of <span class="math notranslate nohighlight">\(x\)</span> and the estimation-error covariance <span class="math notranslate nohighlight">\(P\)</span> as following</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+K_{k} &amp;= P_{k - 1}H_{k}^{T}\bigl(H_{k}P_{k - 1}H_{k}^{T} + R_{k}\bigr)^{1} \\
+\hat{x}_{k} &amp;= \hat{x}_{k - 1} + K_{k}\bigl(y_{k} - H_{k}\hat{x}_{k - 1}\bigr) \\
+P_{k} &amp;= \bigl(I - K_{k}H_{k}\bigr)P_{k - 1}\bigl(I - K_{k}H_{k}\bigr)^{T} + K_{k}R_{k}K_{k}^{T}
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
 
