@@ -82,6 +82,7 @@ For differential equations (continuous → discrete):
      \vdots \\
      \hat{x}_{n}
      \end{bmatrix}
+     
 Example
 ^^^^^^^
 
